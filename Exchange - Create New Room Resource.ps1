@@ -28,7 +28,9 @@ Start-Sleep -Seconds 40
 
 Set-Place $Alias `
     -City $City `
+    -Building $Office `
     -CountryOrRegion "United States"
+    -State "WA"
 
 Set-CalendarProcessing $Alias `
     -AutomateProcessing AutoAccept `

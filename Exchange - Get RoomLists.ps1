@@ -1,0 +1,1 @@
+Get-DistributionGroup -Filter "RecipientTypeDetails -eq 'RoomList'"
