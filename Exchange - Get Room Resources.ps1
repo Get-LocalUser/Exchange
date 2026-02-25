@@ -1,1 +1,0 @@
-Get-EXOMailbox -Filter "RecipientTypeDetails -eq 'RoomMailbox'" | Select-Object UserPrincipalName, DisplayName
