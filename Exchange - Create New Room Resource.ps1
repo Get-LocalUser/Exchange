@@ -45,6 +45,17 @@ Set-Mailbox $Alias `
     -Office $Office
 
 
-Write-Host "Don't forget to add $PrimarySmtp to a RoomList."
-Write-Host "You can use the command below to add"
-Write-Host "`nAdd-DistributionGroupMember -Identity """" -Member $PrimarySmtp" -ForegroundColor Yellow
+$answer = Read-Host "Do you want to add $PrimarySmtp to a Room Distribution Group? 'y/n'"
+if ($answer -match "^(y|yes)$") {
+    $hash = @{}
+    $list = Get-DistributionGroup -RecipientTypeDetails RoomList | Sort-Object Name
+    foreach ($list in $list) {
+        $hash[$list.Name] = $room
+} 
+
+$selectedList = $hash | Out-GridView -Title "Select a Room List" -PassThru
+
+Add-distributionGroupMember -Identity $selectedList -Member "$PrimarySmtp"
+} else {
+    Exit
+}
