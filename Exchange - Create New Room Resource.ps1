@@ -57,5 +57,6 @@ $selectedList = $hash | Out-GridView -Title "Select a Room List" -PassThru
 
 Add-distributionGroupMember -Identity $selectedList -Member "$PrimarySmtp"
 } else {
+    Write-Host "Script is finished" -ForegroundColor Yellow
     Exit
 }
