@@ -1,12 +1,12 @@
 param (
     [Parameter(Mandatory = $true)]
-    [string]$AdminEmail
+    [string]$AdminEmail,
 
     [Parameter(Mandatory = $true)]
-    [string]$MailboxEmail
+    [string]$MailboxEmail,
 
     [Parameter(Mandatory = $true)]
-    [string]$User
+    [string]$User,
 
     [Parameter(Mandatory = $true)]
     [string]$Permissions
