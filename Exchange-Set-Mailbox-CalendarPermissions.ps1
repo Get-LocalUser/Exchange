@@ -1,37 +1,22 @@
 param (
     [Parameter(Mandatory = $true)]
-    [string]$AdminEmail = '',
+    [string]$AdminEmail
 
     [Parameter(Mandatory = $true)]
-    [string]$UserEmail,
+    [string]$MailboxEmail
 
     [Parameter(Mandatory = $true)]
-    [string]$Owner,
+    [string]$User
 
     [Parameter(Mandatory = $true)]
-    [string]$PublishingEditor
+    [string]$Permissions
 )
 
-$RequiredModule = Get-Module -ListAvailable -Name ExchangeOnlineManagement
-if (!$RequiredModule) {
-        Install-Module -Name ExchangeOnlineManagement
-    }
-Import-Module -Name ExchangeOnlineManagement
+Connect-ExchangeOnline -UserPrincipalName $AdminEmail -ShowBanner:$false -ErrorAction Inquire
 
 try {
-    Connect-ExchangeOnline -UserPrincipalName $AdminEmail -ShowBanner:$False -ErrorAction Stop
-    Write-Host "Connected to Exchange Online successfully." -ForegroundColor Green
-} catch {
-    Write-Error "Failed to connect to Exchange Online: $_"
-    exit 1
-}
-
-try {
-    Set-MailboxFolderPermission -Identity "$($UserEmail):\calendar" -User default -AccessRights Reviewer
-    Add-MailboxFolderPermission -Identity "$($UserEmail):\calendar" -User $Owner -AccessRights Owner
-    Add-MailboxFolderPermission -Identity "$($UserEmail):\calendar" -User $PublishingEditor -AccessRights PublishingEditor
-    Get-MailboxFolderPermission -Identity "$email`:\calendar"
+    Add-MailboxFolderPermission -Identity "$($MailboxEmail):\calendar" -User $User -AccessRights  -ErrorAction Stop
 }
 catch {
-    Write-Host "Failed to set a permission: $_"
+    Write-Host "Failed to add permissions to $MailboxEmail for $User: $($_.Exception.Message)"
 }
