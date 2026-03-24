@@ -15,7 +15,7 @@ param (
 Connect-ExchangeOnline -UserPrincipalName $AdminEmail -ShowBanner:$false -ErrorAction Stop
 
 try {
-    Add-MailboxFolderPermission -Identity "$($MailboxEmail):\calendar" -User $User -AccessRights  -ErrorAction Stop
+    Add-MailboxFolderPermission -Identity "$($MailboxEmail):\calendar" -User $User -AccessRights $Permissions -ErrorAction Stop
 }
 catch {
     Write-Host "Failed to add permissions to $MailboxEmail for $User $($_.Exception.Message)"
