@@ -18,13 +18,17 @@ $PrimarySmtp = "$Alias@example.com"
 Write-Host "This may take a few minutes" -ForegroundColor Yellow
 
 New-Mailbox `
-    -Name $Alias `
+    -Name $RoomName `
     -Alias $Alias `
     -Room `
     -DisplayName $RoomName `
     -PrimarySmtpAddress $PrimarySmtp
 
 Start-Sleep -Seconds 40
+
+Set-Mailbox $Alias `
+    -ResourceCapacity $RoomCapacity `
+    -Office $Office
 
 Set-Place $Alias `
     -City $City `
@@ -35,28 +39,14 @@ Set-Place $Alias `
 Set-CalendarProcessing $Alias `
     -AutomateProcessing AutoAccept `
     -BookingWindowInDays 365 `
-    -AllBookInPolicy $false `
+    -AllBookInPolicy $true `
     -AllRequestInPolicy $true `
     -AllRequestOutOfPolicy $false `
     -ForwardRequestsToDelegates $true
 
-Set-Mailbox $Alias `
-    -ResourceCapacity $RoomCapacity `
-    -Office $Office
-
-
 $answer = Read-Host "Do you want to add $PrimarySmtp to a Room Distribution Group? 'y/n'"
 if ($answer -match "^(y|yes)$") {
-    $hash = @{}
-    $list = Get-DistributionGroup -RecipientTypeDetails RoomList | Sort-Object Name
-    foreach ($list in $list) {
-        $hash[$list.Name] = $room
-} 
-
-$selectedList = $hash | Out-GridView -Title "Select a Room List" -PassThru
-
-Add-distributionGroupMember -Identity $selectedList -Member "$PrimarySmtp"
-} else {
-    Write-Host "Script is finished" -ForegroundColor Yellow
-    Exit
+    Get-DistributionGroup -RecipientTypeDetails RoomList | Sort-Object Name
 }
+
+Add-distributionGroupMember -Identity "" -Member "$PrimarySmtp"
