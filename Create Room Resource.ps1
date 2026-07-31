@@ -12,10 +12,10 @@ param(
     [string]$Office
 )
 
-$Alias = ($RoomName -replace '\s','')
+$Alias = $RoomName -replace '[^A-Za-z0-9]', ''
 $PrimarySmtp = "$Alias@example.com"
 
-Write-Host "This may take a few minutes" -ForegroundColor Yellow
+Write-Host "Creating room mailbox, this may take a few minutes..." -ForegroundColor Yellow
 
 New-Mailbox `
     -Name $RoomName `
@@ -33,7 +33,7 @@ Set-Mailbox $Alias `
 Set-Place $Alias `
     -City $City `
     -Building $Office `
-    -CountryOrRegion "United States"
+    -CountryOrRegion "United States" `
     -State "WA"
 
 Set-CalendarProcessing $Alias `
@@ -44,9 +44,33 @@ Set-CalendarProcessing $Alias `
     -AllRequestOutOfPolicy $false `
     -ForwardRequestsToDelegates $true
 
-$answer = Read-Host "Do you want to add $PrimarySmtp to a Room Distribution Group? 'y/n'"
-if ($answer -match "^(y|yes)$") {
-    Get-DistributionGroup -RecipientTypeDetails RoomList | Sort-Object Name
+Write-Host ""
+Write-Host "Room mailbox created:" -ForegroundColor Green
+Write-Host "  Name : $RoomName"
+Write-Host "  Email: $PrimarySmtp"
+Write-Host ""
+
+$answer = Read-Host "Do you want to add $PrimarySmtp to a Room List? (y/n)"
+
+if ($answer -match '^(y|yes)$') {
+
+    Write-Host ""
+    Write-Host "Available Room Lists:" -ForegroundColor Cyan
+
+    Get-DistributionGroup -RecipientTypeDetails RoomList |
+        Sort-Object Name | 
+        Select-Object Name, PrimarySmtpAddress | 
+        Format-Table
+
+    Write-Host ""
+
+    $RoomList = Read-Host "Enter the Room List name or email address"
+
+    Add-DistributionGroupMember `
+        -Identity $RoomList `
+        -Member $PrimarySmtp
+
+    Write-Host "$PrimarySmtp added to $RoomList" -ForegroundColor Green
 }
 
-Add-distributionGroupMember -Identity "" -Member "$PrimarySmtp"
+Write-Host "Complete." -ForegroundColor Green
