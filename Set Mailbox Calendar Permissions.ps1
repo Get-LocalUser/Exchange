@@ -1,8 +1,5 @@
 param (
     [Parameter(Mandatory = $true)]
-    [string]$AdminEmail,
-
-    [Parameter(Mandatory = $true)]
     [string]$MailboxEmail,
 
     [Parameter(Mandatory = $true)]
@@ -11,8 +8,6 @@ param (
     [Parameter(Mandatory = $true)]
     [string]$Permissions
 )
-
-Connect-ExchangeOnline -UserPrincipalName $AdminEmail -ShowBanner:$false -ErrorAction Stop
 
 try {
     Add-MailboxFolderPermission -Identity "$($MailboxEmail):\calendar" -User $User -AccessRights $Permissions -ErrorAction Stop
