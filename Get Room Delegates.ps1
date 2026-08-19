@@ -12,12 +12,9 @@ $action = foreach ($room in $rooms) {
             RoomSmtpAddress     = $room.PrimarySmtpAddress
             Delegate            = $delegateRecipient.DisplayName
             DelegateSmtpAddress = $delegateRecipient.PrimarySmtpAddress
+            DelegateObjectID    = $delegaterecipient.ExternalDirectoryObjectId
         }
     }
 }
 
-<<<<<<< Updated upstream
-$action | Export-Csv -Path "C:\Users\Admin\Downloads\shared\RoomDelegates.csv" -NoTypeInformation 
-=======
-$action | Export-Csv -Path "C:\Users\hrkerko\Downloads\RoomDelegates.csv" -NoTypeInformation -Append
->>>>>>> Stashed changes
+$action | Export-Csv -Path "$ENV:USERPROFILE\Downloads\RoomDelegates.csv" -NoTypeInformation 
