@@ -16,4 +16,8 @@ $action = foreach ($room in $rooms) {
     }
 }
 
+<<<<<<< Updated upstream
 $action | Export-Csv -Path "C:\Users\Admin\Downloads\shared\RoomDelegates.csv" -NoTypeInformation 
+=======
+$action | Export-Csv -Path "C:\Users\hrkerko\Downloads\RoomDelegates.csv" -NoTypeInformation -Append
+>>>>>>> Stashed changes

@@ -1,4 +1,4 @@
-$mailboxes = Get-EXOMailbox -RecipientTypeDetails RoomMailbox -ResultSize Unlimited
+$mailboxes = Get-Mailbox -RecipientTypeDetails RoomMailbox -ResultSize Unlimited
 
 $results = foreach ($mail in $mailboxes) {
     Get-Place -Identity $mail.Identity |
